@@ -29,6 +29,7 @@ const schema = yup.object().shape({
   produce: yup.string().required(),
   cost: yup.number().required(),
   weight: yup.number().required(),
+  phonenumber: yup.string().required(),
   served_by: yup.string().required()
 });
 
@@ -74,6 +75,22 @@ const Form = () => {
           name='name'
           {...register('name', { required: true })}
           placeholder='Enter supplier name'
+          type='text'
+        />
+        <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+      </FormControl>
+
+      <FormControl
+        isInvalid={errors?.phonenumber?.message}
+        isRequired
+        id='phonenumber'
+      >
+        <FormLabel>Supplier Phone Number</FormLabel>
+        <Input
+          focusBorderColor='brand.800'
+          name='phonenumber'
+          {...register('phonenumber', { required: true })}
+          placeholder='Enter supplier phone number'
           type='text'
         />
         <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
