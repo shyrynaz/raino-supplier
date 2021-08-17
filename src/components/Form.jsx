@@ -103,9 +103,10 @@ const Form = () => {
           focusBorderColor='brand.800'
           {...register('produce', { required: true })}
         >
-          <option value='option1'>Option 1</option>
-          <option value='option2'>Option 2</option>
-          <option value='option3'>Option 3</option>
+          <option value='Tilapia'>Tilapia</option>
+          <option value='Omena'>Omena</option>
+          <option value='Nile Perch'>Nile Perch</option>
+          <option value='Chicken'>Chicken</option>
         </Select>
 
         <FormErrorMessage>{errors?.produce?.message}</FormErrorMessage>
@@ -157,9 +158,10 @@ const Form = () => {
           focusBorderColor='brand.800'
           {...register('served_by', { required: true })}
         >
-          <option value='option1'>Option 1</option>
-          <option value='option2'>Option 2</option>
-          <option value='option3'>Option 3</option>
+          <option value='Lawrence Nyakiamo'>Lawrence Nyakiamo</option>
+          <option value='Paul Musyoka'>Paul Musyoka</option>
+          <option value='Kenneth Simiyu'>Kenneth Simiyu</option>
+          <option value='John Mwangi'>John Mwangi</option>
         </Select>
 
         <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
