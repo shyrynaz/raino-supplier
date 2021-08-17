@@ -93,7 +93,7 @@ const Form = () => {
           placeholder='Enter supplier phone number'
           type='text'
         />
-        <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+        <FormErrorMessage>{errors?.phonenumber?.message}</FormErrorMessage>
       </FormControl>
 
       <FormControl
