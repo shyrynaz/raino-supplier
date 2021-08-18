@@ -13,7 +13,8 @@ import {
   HStack,
   Button,
   Select,
-  FormHelperText
+  FormHelperText,
+  useToast
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -44,7 +45,7 @@ const schema = yup.object().shape({
   served_by: yup.string().required()
 });
 
-init('user_uX6wSYQVp3oMg7Zg1Iuck');
+init('user_Q1UjiMTtd9FAM5Us9Zo7C');
 
 const Form = () => {
   const {
@@ -56,6 +57,8 @@ const Form = () => {
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
+
+  const toast = useToast();
 
   const totalCost = watch('cost') * watch('weight');
 
@@ -98,10 +101,21 @@ const Form = () => {
   const sendEmail = () => {
     sendForm('supplier_sourcing', 'supplier_sourcing', '#form').then(
       function (response) {
-        console.log(response);
+        toast({
+          title: 'Email sent successful.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
       },
       function (error) {
-        console.log(error);
+        toast({
+          title: 'Unable to send Email',
+          description: '',
+          status: 'error',
+          duration: 5000,
+          isClosable: true
+        });
       }
     );
   };
@@ -114,7 +128,6 @@ const Form = () => {
         {
           label: 'Confirm',
           onClick: () => {
-            console.log(values);
             sendEmail();
             // sendSMS(values);
           }
