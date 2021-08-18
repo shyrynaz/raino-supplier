@@ -24,6 +24,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { thousands_separators } from '../utils/formatCurrency';
 import { init, sendForm } from 'emailjs-com';
 import * as ujumbe from 'ujumbesms';
+import axios from 'axios';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -35,7 +36,7 @@ const schema = yup.object().shape({
   served_by: yup.string().required()
 });
 
-init('user_Q1UjiMTtd9FAM5Us9Zo7C');
+init('user_uX6wSYQVp3oMg7Zg1Iuck');
 
 const Form = () => {
   const {
@@ -51,28 +52,32 @@ const Form = () => {
   const totalCost = watch('cost') * watch('weight');
 
   const sendSMS = data => {
-    const message1 = new ujumbe.SMS(
-      [data.phonenumber],
-      `Thank you for doing business with us we have received ${
-        data.weight
-      }kgs of ${data.produce} worth Ksh. ${thousands_separators(
-        totalCost
-      )}. you were served by ${data.served_by}`,
-      'Raino Tech4Impact Ltd'
-    );
-
-    new ujumbe.Api({
-      email: 'francis@raino.co.ke',
-      apiKey: process.env.REACT_APP_SMS_API_KEY
-    })
-      .queue(message1)
-      .then(data => {
-        console.log('Response status:', data.resStatus);
-        console.log('Ujumbe SMS response', data.apiResponse);
+    const message = {
+      data: [
+        {
+          message_bag: {
+            numbers: data.phonenumber,
+            message: `Thank you for doing business with us we have received ${
+              data.weight
+            }kgs of ${data.produce} worth Ksh. ${thousands_separators(
+              totalCost
+            )}. you were served by ${data.served_by}`,
+            sender: 'Raino Tech4Impact Ltd'
+          }
+        }
+      ]
+    };
+    const headers = {
+      'Content-Type': 'application/json',
+      'X-Authorization': 'MDE1NjMzNmY5ZjAzNjE0ZDE1Nzg3OTQwZDllYjQ3',
+      //prettier-ignore
+      'email': 'francis@raino.co.ke'
+    };
+    axios
+      .post('https://ujumbesms.co.ke/api/messaging', message, {
+        headers
       })
-      .catch(err => {
-        throw err;
-      });
+      .then(res => console.log(res));
   };
 
   const sendEmail = () => {
