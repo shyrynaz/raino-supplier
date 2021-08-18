@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  StackDivider,
-  Box,
   VStack,
   FormControl,
   FormLabel,
@@ -48,7 +46,31 @@ const Form = () => {
 
   const totalCost = watch('cost') * watch('weight');
 
-  console.log(totalCost);
+  const sendSMS = data => {
+    const message = [
+      {
+        message_bag: {
+          numbers: data.phonenumber,
+          message: `Thank you for doing business with us we have received ${
+            data.weight
+          }kgs of ${data.produce} worth Ksh. ${thousands_separators(
+            totalCost
+          )}`,
+          sender: 'Raino Tech4Impact Ltd'
+        }
+      }
+    ];
+    fetch('http://ujumbesms.co.ke/api/messaging', {
+      method: 'POST', // or 'PUT'
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      ' X-­Authorization': process.env.REACT_APP_SMS_API_KEY,
+      body: JSON.stringify(message)
+    }).then(res => {
+      console.log(res);
+    });
+  };
 
   const onSubmit = values => {
     confirmAlert({
@@ -57,7 +79,10 @@ const Form = () => {
       buttons: [
         {
           label: 'Confirm',
-          onClick: () => console.log(values)
+          onClick: () => {
+            console.log(values);
+            sendSMS(values);
+          }
         },
         {
           label: 'Cancel',

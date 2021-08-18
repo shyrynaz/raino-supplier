@@ -1,13 +1,6 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {
-  ChakraProvider,
-  extendTheme,
-  Flex,
-  Image,
-  Text
-} from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Flex } from '@chakra-ui/react';
 import Navbar from './components/Navbar';
 import Form from './components/Form';
 const colors = {
