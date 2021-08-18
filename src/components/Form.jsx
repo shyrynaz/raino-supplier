@@ -23,6 +23,8 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { thousands_separators } from '../utils/formatCurrency';
 
+import * as ujumbe from 'ujumbesms';
+
 const schema = yup.object().shape({
   name: yup.string().required(),
   location: yup.string().required(),
@@ -47,29 +49,26 @@ const Form = () => {
   const totalCost = watch('cost') * watch('weight');
 
   const sendSMS = data => {
-    const message = [
-      {
-        message_bag: {
-          numbers: data.phonenumber,
-          message: `Thank you for doing business with us we have received ${
-            data.weight
-          }kgs of ${data.produce} worth Ksh. ${thousands_separators(
-            totalCost
-          )}`,
-          sender: 'Raino Tech4Impact Ltd'
-        }
-      }
-    ];
-    fetch('http://ujumbesms.co.ke/api/messaging', {
-      method: 'POST', // or 'PUT'
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      ' X-­Authorization': process.env.REACT_APP_SMS_API_KEY,
-      body: JSON.stringify(message)
-    }).then(res => {
-      console.log(res);
-    });
+    const message1 = new ujumbe.SMS(
+      [data.phonenumber],
+      `Thank you for doing business with us we have received ${
+        data.weight
+      }kgs of ${data.produce} worth Ksh. ${thousands_separators(totalCost)}`,
+      'Raino Tech4Impact Ltd'
+    );
+
+    new ujumbe.Api({
+      email: 'francis@raino.co.ke',
+      apiKey: process.env.REACT_APP_SMS_API_KEY
+    })
+      .queue(message1)
+      .then(data => {
+        console.log('Response status:', data.resStatus);
+        console.log('Ujumbe SMS response', data.apiResponse);
+      })
+      .catch(err => {
+        throw err;
+      });
   };
 
   const onSubmit = values => {
