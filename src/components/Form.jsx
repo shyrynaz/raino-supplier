@@ -26,13 +26,21 @@ import { init, sendForm } from 'emailjs-com';
 import * as ujumbe from 'ujumbesms';
 import axios from 'axios';
 
+var fetch = require('whatwg-fetch');
+
 const schema = yup.object().shape({
   name: yup.string().required(),
   location: yup.string().required(),
   produce: yup.string().required(),
   cost: yup.number().required(),
   weight: yup.number().required(),
-  phonenumber: yup.string().required(),
+  phonenumber: yup
+    .string()
+    .matches(
+      /^(\+254|0|020|05){1}[ ]?[0-7]{1}([0-9]{1}[0-9]{1})[ ]?[0-9]{3}[ ]?[0-9]{3}/g,
+      'Phone number is not valid'
+    )
+    .required(),
   served_by: yup.string().required()
 });
 
@@ -51,33 +59,40 @@ const Form = () => {
 
   const totalCost = watch('cost') * watch('weight');
 
-  const sendSMS = data => {
-    const message = {
+  const sendSMS = values => {
+    var data = JSON.stringify({
       data: [
         {
           message_bag: {
-            numbers: data.phonenumber,
             message: `Thank you for doing business with us we have received ${
-              data.weight
-            }kgs of ${data.produce} worth Ksh. ${thousands_separators(
+              values.weight
+            }kgs of ${values.produce} worth Ksh. ${thousands_separators(
               totalCost
-            )}. you were served by ${data.served_by}`,
+            )}. you were served by ${values.served_by}`,
+            numbers: values.phonenumber,
             sender: 'Raino Tech4Impact Ltd'
           }
         }
       ]
+    });
+    var config = {
+      method: 'post',
+      url: 'https://ujumbesms.co.ke/api/messaging',
+      headers: {
+        'x-Authorization': 'MDE1NjMzNmY5ZjAzNjE0ZDE1Nzg3OTQwZDllYjQ3',
+        email: 'francis@raino.co.ke',
+        'Content-Type': 'application/json'
+      },
+      data: data
     };
-    const headers = {
-      'Content-Type': 'application/json',
-      'X-Authorization': 'MDE1NjMzNmY5ZjAzNjE0ZDE1Nzg3OTQwZDllYjQ3',
-      //prettier-ignore
-      'email': 'francis@raino.co.ke'
-    };
-    axios
-      .post('https://ujumbesms.co.ke/api/messaging', message, {
-        headers
+
+    fetch(config)
+      .then(function (response) {
+        console.log(JSON.stringify(response.data));
       })
-      .then(res => console.log(res));
+      .catch(function (error) {
+        console.log(error);
+      });
   };
 
   const sendEmail = () => {
@@ -120,7 +135,10 @@ const Form = () => {
         alignItems: 'center',
         justifyContent: 'center'
       }}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={event => {
+        event.preventDefault();
+        handleSubmit(onSubmit);
+      }}
       id='form'
     >
       <VStack
