@@ -22,7 +22,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { thousands_separators } from '../utils/formatCurrency';
-
+import { init, sendForm } from 'emailjs-com';
 import * as ujumbe from 'ujumbesms';
 
 const schema = yup.object().shape({
@@ -34,6 +34,8 @@ const schema = yup.object().shape({
   phonenumber: yup.string().required(),
   served_by: yup.string().required()
 });
+
+init('user_Q1UjiMTtd9FAM5Us9Zo7C');
 
 const Form = () => {
   const {
@@ -71,6 +73,17 @@ const Form = () => {
       });
   };
 
+  const sendEmail = () => {
+    sendForm('supplier_sourcing', 'supplier_sourcing', '#form').then(
+      function (response) {
+        console.log(response);
+      },
+      function (error) {
+        console.log(error);
+      }
+    );
+  };
+
   const onSubmit = values => {
     confirmAlert({
       title: '',
@@ -80,6 +93,7 @@ const Form = () => {
           label: 'Confirm',
           onClick: () => {
             console.log(values);
+            sendEmail();
             sendSMS(values);
           }
         },
@@ -92,143 +106,159 @@ const Form = () => {
   };
 
   return (
-    <VStack
-      // divider={<StackDivider borderColor='gray.200' />}
-      spacing={4}
-      marginTop={30}
-      align='stretch'
-      width='80%'
+    <form
+      style={{
+        width: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}
+      onSubmit={handleSubmit(onSubmit)}
+      id='form'
     >
-      <FormControl isInvalid={errors?.name?.message} isRequired id='name'>
-        <FormLabel>Supplier Name</FormLabel>
-        <Input
-          focusBorderColor='brand.800'
-          name='name'
-          {...register('name', { required: true })}
-          placeholder='Enter supplier name'
-          type='text'
-        />
-        <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl
-        isInvalid={errors?.phonenumber?.message}
-        isRequired
-        id='phonenumber'
+      <VStack
+        // divider={<StackDivider borderColor='gray.200' />}
+        spacing={4}
+        marginTop={30}
+        align='stretch'
+        width='80%'
       >
-        <FormLabel>Supplier Phone Number</FormLabel>
-        <Input
-          focusBorderColor='brand.800'
-          name='phonenumber'
-          {...register('phonenumber', { required: true })}
-          placeholder='Enter supplier phone number'
-          type='text'
-        />
-        <FormErrorMessage>{errors?.phonenumber?.message}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl
-        isInvalid={errors?.location?.message}
-        isRequired
-        id='location'
-      >
-        <FormLabel>Location/BMU</FormLabel>
-        <Input
-          focusBorderColor='brand.800'
-          name='location'
-          placeholder='Enter supplier location'
-          {...register('location', { required: true })}
-          type='text'
-        />
-        <FormErrorMessage>{errors?.location?.message}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl isInvalid={errors?.produce?.message} isRequired id='produce'>
-        <FormLabel>Produce Type</FormLabel>
-        <Select
-          placeholder='Select...'
-          name='produce'
-          focusBorderColor='brand.800'
-          {...register('produce', { required: true })}
-        >
-          <option value='Tilapia'>Tilapia</option>
-          <option value='Omena'>Omena</option>
-          <option value='Nile Perch'>Nile Perch</option>
-          <option value='Chicken'>Chicken</option>
-        </Select>
-
-        <FormErrorMessage>{errors?.produce?.message}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl isInvalid={errors?.cost?.message} isRequired id='cost'>
-        <FormLabel>Cost Per Kg</FormLabel>
-        <NumberInput min={0}>
-          <NumberInputField
-            placeholder='Enter cost per KG'
+        <FormControl isInvalid={errors?.name?.message} isRequired id='name'>
+          <FormLabel>Supplier Name</FormLabel>
+          <Input
             focusBorderColor='brand.800'
-            name='cost'
-            {...register('cost', { required: true })}
+            name='name'
+            {...register('name', { required: true })}
+            placeholder='Enter supplier name'
+            type='text'
           />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <FormErrorMessage>{errors?.cost?.message}</FormErrorMessage>
-      </FormControl>
+          <FormErrorMessage>{errors?.name?.message}</FormErrorMessage>
+        </FormControl>
 
-      <FormControl isInvalid={errors?.weight?.message} isRequired id='weight'>
-        <FormLabel>Total Net Weight</FormLabel>
-        <NumberInput min={0}>
-          <NumberInputField
-            placeholder='Enter total net weight'
+        <FormControl
+          isInvalid={errors?.phonenumber?.message}
+          isRequired
+          id='phonenumber'
+        >
+          <FormLabel>Supplier Phone Number</FormLabel>
+          <Input
             focusBorderColor='brand.800'
-            name='weight'
-            {...register('weight', { required: true })}
+            name='phonenumber'
+            {...register('phonenumber', { required: true })}
+            placeholder='Enter supplier phone number'
+            type='text'
           />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-        <FormErrorMessage>{errors?.weight?.message}</FormErrorMessage>
-        <FormHelperText>
-          Total ksh. {thousands_separators(totalCost)}
-        </FormHelperText>
-      </FormControl>
+          <FormErrorMessage>{errors?.phonenumber?.message}</FormErrorMessage>
+        </FormControl>
 
-      <FormControl
-        isInvalid={errors?.served_by?.message}
-        isRequired
-        id='served_by'
-      >
-        <FormLabel>Served By</FormLabel>
-        <Select
-          placeholder='Select...'
-          name='served_by'
-          focusBorderColor='brand.800'
-          {...register('served_by', { required: true })}
+        <FormControl
+          isInvalid={errors?.location?.message}
+          isRequired
+          id='location'
         >
-          <option value='Lawrence Nyakiamo'>Lawrence Nyakiamo</option>
-          <option value='Paul Musyoka'>Paul Musyoka</option>
-          <option value='Kenneth Simiyu'>Kenneth Simiyu</option>
-          <option value='John Mwangi'>John Mwangi</option>
-        </Select>
+          <FormLabel>Location/BMU</FormLabel>
+          <Input
+            focusBorderColor='brand.800'
+            name='location'
+            placeholder='Enter supplier location'
+            {...register('location', { required: true })}
+            type='text'
+          />
+          <FormErrorMessage>{errors?.location?.message}</FormErrorMessage>
+        </FormControl>
 
-        <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
-      </FormControl>
-
-      <HStack>
-        <Button
-          onClick={handleSubmit(onSubmit)}
-          width='50%'
-          bg='brand.900'
-          colorScheme='purple'
+        <FormControl
+          isInvalid={errors?.produce?.message}
+          isRequired
+          id='produce'
         >
-          Submit
-        </Button>
-      </HStack>
-    </VStack>
+          <FormLabel>Produce Type</FormLabel>
+          <Select
+            placeholder='Select...'
+            name='produce'
+            focusBorderColor='brand.800'
+            {...register('produce', { required: true })}
+          >
+            <option value='Tilapia'>Tilapia</option>
+            <option value='Omena'>Omena</option>
+            <option value='Nile Perch'>Nile Perch</option>
+            <option value='Chicken'>Chicken</option>
+          </Select>
+
+          <FormErrorMessage>{errors?.produce?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={errors?.cost?.message} isRequired id='cost'>
+          <FormLabel>Cost Per Kg</FormLabel>
+          <NumberInput min={0}>
+            <NumberInputField
+              placeholder='Enter cost per KG'
+              focusBorderColor='brand.800'
+              name='cost'
+              {...register('cost', { required: true })}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormErrorMessage>{errors?.cost?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={errors?.weight?.message} isRequired id='weight'>
+          <FormLabel>Total Net Weight</FormLabel>
+          <NumberInput min={0}>
+            <NumberInputField
+              placeholder='Enter total net weight'
+              focusBorderColor='brand.800'
+              name='weight'
+              {...register('weight', { required: true })}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormErrorMessage>{errors?.weight?.message}</FormErrorMessage>
+          <FormHelperText>
+            Total ksh. {thousands_separators(totalCost)}
+          </FormHelperText>
+        </FormControl>
+
+        <FormControl
+          isInvalid={errors?.served_by?.message}
+          isRequired
+          id='served_by'
+        >
+          <FormLabel>Served By</FormLabel>
+          <Select
+            placeholder='Select...'
+            name='served_by'
+            focusBorderColor='brand.800'
+            {...register('served_by', { required: true })}
+          >
+            <option value='Lawrence Nyakiamo'>Lawrence Nyakiamo</option>
+            <option value='Paul Musyoka'>Paul Musyoka</option>
+            <option value='Kenneth Simiyu'>Kenneth Simiyu</option>
+            <option value='John Mwangi'>John Mwangi</option>
+          </Select>
+
+          <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
+        </FormControl>
+
+        <HStack>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            width='50%'
+            bg='brand.900'
+            marginTop={5}
+            colorScheme='purple'
+          >
+            Submit
+          </Button>
+        </HStack>
+      </VStack>
+    </form>
   );
 };
 
