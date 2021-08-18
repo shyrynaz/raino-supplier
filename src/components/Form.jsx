@@ -14,7 +14,8 @@ import {
   NumberDecrementStepper,
   HStack,
   Button,
-  Select
+  Select,
+  FormHelperText
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -22,6 +23,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import { thousands_separators } from '../utils/formatCurrency';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -37,11 +39,16 @@ const Form = () => {
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors }
   } = useForm({
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
+
+  const totalCost = watch('cost') * watch('weight');
+
+  console.log(totalCost);
 
   const onSubmit = values => {
     confirmAlert({
@@ -161,6 +168,9 @@ const Form = () => {
           </NumberInputStepper>
         </NumberInput>
         <FormErrorMessage>{errors?.weight?.message}</FormErrorMessage>
+        <FormHelperText>
+          Total ksh. {thousands_separators(totalCost)}
+        </FormHelperText>
       </FormControl>
 
       <FormControl
@@ -183,6 +193,7 @@ const Form = () => {
 
         <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
       </FormControl>
+
       <HStack>
         <Button
           onClick={handleSubmit(onSubmit)}
