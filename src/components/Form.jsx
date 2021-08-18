@@ -115,8 +115,8 @@ const Form = () => {
           label: 'Confirm',
           onClick: () => {
             console.log(values);
-            // sendEmail();
-            sendSMS(values);
+            sendEmail();
+            // sendSMS(values);
           }
         },
         {
