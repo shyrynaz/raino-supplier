@@ -2,7 +2,7 @@
   "name": "raino-supplier",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://ujumbesms.co.ke",
+  "proxy": "https://ujumbesms.co.ke",
   "dependencies": {
     "@chakra-ui/react": "^1.6.6",
     "@emotion/react": "^11",

@@ -55,7 +55,9 @@ const Form = () => {
       [data.phonenumber],
       `Thank you for doing business with us we have received ${
         data.weight
-      }kgs of ${data.produce} worth Ksh. ${thousands_separators(totalCost)}`,
+      }kgs of ${data.produce} worth Ksh. ${thousands_separators(
+        totalCost
+      )}. you were served by ${data.served_by}`,
       'Raino Tech4Impact Ltd'
     );
 
@@ -93,7 +95,7 @@ const Form = () => {
           label: 'Confirm',
           onClick: () => {
             console.log(values);
-            sendEmail();
+            // sendEmail();
             sendSMS(values);
           }
         },
