@@ -24,10 +24,7 @@ import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
 import { thousands_separators } from '../utils/formatCurrency';
 import { init, sendForm } from 'emailjs-com';
-import * as ujumbe from 'ujumbesms';
 import axios from 'axios';
-
-var fetch = require('whatwg-fetch');
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -63,35 +60,21 @@ const Form = () => {
   const totalCost = watch('cost') * watch('weight');
 
   const sendSMS = values => {
-    var data = JSON.stringify({
-      data: [
-        {
-          message_bag: {
-            message: `Thank you for doing business with us we have received ${
-              values.weight
-            }kgs of ${values.produce} worth Ksh. ${thousands_separators(
-              totalCost
-            )}. you were served by ${values.served_by}`,
-            numbers: values.phonenumber,
-            sender: 'Raino Tech4Impact Ltd'
-          }
-        }
-      ]
-    });
     var config = {
       method: 'post',
-      url: 'https://ujumbesms.co.ke/api/messaging',
-      headers: {
-        'x-Authorization': 'MDE1NjMzNmY5ZjAzNjE0ZDE1Nzg3OTQwZDllYjQ3',
-        email: 'francis@raino.co.ke',
-        'Content-Type': 'application/json'
-      },
-      data: data
+      url: 'https://sendsms-86bupk1vp-shyrynaz.vercel.app/api/sendSms',
+
+      data: values
     };
 
-    fetch(config)
+    axios(config)
       .then(function (response) {
-        console.log(JSON.stringify(response.data));
+        toast({
+          title: 'sms sent successful.',
+          status: 'success',
+          duration: 5000,
+          isClosable: true
+        });
       })
       .catch(function (error) {
         console.log(error);
