@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   VStack,
   FormControl,
@@ -25,6 +25,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import { thousands_separators } from '../utils/formatCurrency';
 import { init, sendForm } from 'emailjs-com';
 import axios from 'axios';
+import { Datepicker } from './Datepicker';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -54,6 +55,8 @@ const Form = () => {
     mode: 'onBlur',
     resolver: yupResolver(schema)
   });
+
+  const [startDate, setStartDate] = useState(new Date());
 
   const toast = useToast();
 
@@ -265,6 +268,17 @@ const Form = () => {
           </Select>
 
           <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
+        </FormControl>
+
+        <FormControl isInvalid={errors?.date?.message} isRequired id='date'>
+          <FormLabel>Date</FormLabel>
+          <Datepicker
+            startDate={startDate}
+            setStartDate={setStartDate}
+            name='date'
+          />
+
+          <FormErrorMessage>{errors?.date?.message}</FormErrorMessage>
         </FormControl>
 
         <HStack>
