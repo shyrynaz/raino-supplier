@@ -26,6 +26,7 @@ import { thousands_separators } from '../utils/formatCurrency';
 import { init, sendForm } from 'emailjs-com';
 import axios from 'axios';
 import { Datepicker } from './Datepicker';
+import { format } from 'date-fns';
 
 const schema = yup.object().shape({
   name: yup.string().required(),
@@ -62,12 +63,17 @@ const Form = () => {
 
   const totalCost = watch('cost') * watch('weight');
 
+  console.log(format(startDate, "yyyy-MM-dd'T'HH:mm"));
+
   const sendSMS = values => {
     var config = {
       method: 'post',
-      url: 'https://sendsms-86bupk1vp-shyrynaz.vercel.app/api/sendSms',
+      url: 'https://smssender-2a9m4s4to-shyrynaz.vercel.app/',
 
-      data: values
+      data: {
+        ...values,
+        date: format(new Date(startDate), 'yyyy-MM-dd HH:mm')
+      }
     };
 
     axios(config)
@@ -115,7 +121,7 @@ const Form = () => {
           label: 'Confirm',
           onClick: () => {
             sendEmail();
-            // sendSMS(values);
+            sendSMS(values);
           }
         },
         {
