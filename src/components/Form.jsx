@@ -68,7 +68,7 @@ const Form = () => {
   const sendSMS = values => {
     var config = {
       method: 'post',
-      url: 'https://smssender-2a9m4s4to-shyrynaz.vercel.app/',
+      url: 'https://smssender-qpib6jdq0-shyrynaz.vercel.app/',
 
       data: {
         ...values,
