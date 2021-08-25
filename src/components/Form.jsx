@@ -271,6 +271,9 @@ const Form = () => {
             <option value='Paul Musyoka'>Paul Musyoka</option>
             <option value='Kenneth Simiyu'>Kenneth Simiyu</option>
             <option value='John Mwangi'>John Mwangi</option>
+            <option value='Felix Obunga'>Felix Obunga</option>
+            <option value='Abigail Gachigi'>Abigail Gachigi</option>
+            <option value='Irene Anyango'>Irene Anyango</option>
           </Select>
 
           <FormErrorMessage>{errors?.served_by?.message}</FormErrorMessage>
@@ -286,13 +289,20 @@ const Form = () => {
 
           <FormErrorMessage>{errors?.date?.message}</FormErrorMessage>
         </FormControl>
-
+        <Input
+          style={{ opacity: 0 }}
+          focusBorderColor='brand.800'
+          name='total'
+          placeholder='Enter supplier location'
+          {...register('total')}
+          type='text'
+          value={totalCost}
+        />
         <HStack>
           <Button
             onClick={handleSubmit(onSubmit)}
             width='50%'
             bg='brand.900'
-            marginTop={5}
             colorScheme='purple'
           >
             Submit

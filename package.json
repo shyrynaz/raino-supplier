@@ -22,6 +22,7 @@
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.12.2",
     "react-scripts": "4.0.3",
+    "styled-components": "^5.3.1",
     "ujumbesms": "^0.3.4",
     "web-vitals": "^0.2.4",
     "workbox-background-sync": "^5.1.3",
