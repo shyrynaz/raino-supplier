@@ -14,7 +14,9 @@ import {
   Button,
   Select,
   FormHelperText,
-  useToast
+  useToast,
+  List,
+  ListItem
 } from '@chakra-ui/react';
 import * as yup from 'yup';
 import { useForm } from 'react-hook-form';
@@ -128,7 +130,19 @@ const Form = () => {
           label: 'Cancel',
           onClick: () => onclose
         }
-      ]
+      ],
+      childrenElement: () => (
+        <List spacing={3}>
+          <ListItem>Supplier: {values.name}</ListItem>
+          <ListItem>Location: {values.location}</ListItem>
+          <ListItem>Produce: {values.produce}</ListItem>
+          <ListItem>Cost Per Kg: {values.cost}</ListItem>
+          <ListItem>Total Weight: {values.weight}</ListItem>
+          <ListItem>Total: {totalCost}</ListItem>
+          <ListItem>Served by: {values.served_by}</ListItem>
+          <ListItem>Date: {format(startDate, 'yyyy-MM-dd HH:mm')}</ListItem>
+        </List>
+      )
     });
   };
 
