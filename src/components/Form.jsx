@@ -310,7 +310,7 @@ const Form = () => {
           placeholder='Enter supplier location'
           {...register('total')}
           type='text'
-          value={totalCost}
+          value={totalCost.toFixed(3)}
         />
         <HStack>
           <Button
